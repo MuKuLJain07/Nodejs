@@ -3,31 +3,29 @@ const yargs = require('yargs')
 const notes = require('./notes')
 const chalk = require('chalk')
 
-// variables
-// const command = yargs.argv['action']
-
-// if (command == "add") {
-//     console.log(chalk.green("Success!!"))
-// } else if (command == "remove") {
-//     console.log(chalk.red("Success!!"))
-// } else if (command == "read") {
-//     console.log(chalk.red("Success!!"))
-// } else if (command == "list") {
-//     console.log(chalk.red("Success!!"))
-// }
-// else {
-//     console.log(chalk.red("No valid action is given"))
-// }
-
 
 // yarg command
 yargs.command({
     command: 'add',
     description: 'Add a new note',
-    handler: function () {
-        console.log("added")
+    builder: {
+        title: {
+            describe: "Notes title",
+            demandOption: true,
+            type: 'string'
+        },
+        body: {
+            describe: "Notes body",
+            demandOption: true,
+            type: 'string'
+        }
+    },
+    handler: function (argv) {
+        console.log("Title:", argv['title'])
+        console.log("Body:", argv['body'])
     }
 })
+
 yargs.command({
     command: 'remove',
     description: 'remove a new note',
@@ -35,6 +33,7 @@ yargs.command({
         console.log("removed")
     }
 })
+
 yargs.command({
     command: 'read',
     description: 'Read your notes',
@@ -42,6 +41,7 @@ yargs.command({
         console.log("Reading....")
     }
 })
+
 yargs.command({
     command: 'list',
     description: 'List your notes',

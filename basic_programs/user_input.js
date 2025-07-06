@@ -1,2 +1,5 @@
 console.log("hello")
-console.log(process.argv[2])
+
+
+// node "m:\Node.js\basic_programs\user_input.js" Mukul
+console.log(process.argv)
