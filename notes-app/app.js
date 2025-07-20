@@ -1,6 +1,6 @@
 // modules
-const yargs = require('yargs')
 const notes = require('./notes')
+const yargs = require('yargs')
 const chalk = require('chalk')
 
 
