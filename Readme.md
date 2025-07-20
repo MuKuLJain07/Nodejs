@@ -8,6 +8,8 @@ Node modules are reusable blocks of code—JavaScript files or directories—tha
 
 **Types of Node Modules:**
 - **User-made modules:** Custom modules created by developers.
+  To create user-made modules, you need to create a function and export in, then you can import this file as a module in another program and use it's functions.
+
 - **NPM modules:** Packages installed via [npm](https://www.npmjs.com/), the Node Package Manager.
 
 ## User Inputs in Node.js Applications
@@ -36,4 +38,62 @@ node app.js Mukul
   {{functionalies of yargs module}}
 
 ## Working with Json
+1. Writing to JSON file
 
+```js
+  const fs = require('fs');
+
+  const user = {
+    name: "Mukul",
+    age: 25,
+    hobbies: ["coding", "reading", "gaming"]
+  };
+
+  // Convert object to JSON string and write to file
+  fs.writeFile('user.json', JSON.stringify(user, null, 2), (err) => {
+    if (err) throw err;
+    console.log('Data written to file');
+  });
+
+```
+
+2. Reading from a JSON file
+
+```js
+  const fs = require('fs');
+
+  fs.readFile('user.json', 'utf8', (err, data) => {
+    if (err) throw err;
+    
+    // Parse JSON string to object
+    const user = JSON.parse(data);
+    console.log(user.name); // Output: Mukul
+    console.log(user.hobbies); // Output: ["coding", "reading", "gaming"]
+  });
+
+```
+
+
+## Asyncronous application in Node js 
+
+## Callback Functions
+Javascript is a syncronous language, but you can achieve asyncronous work in js using callback functions.
+
+Example - 
+suppose there is a function x which is accepting another function y as it's argument.
+```js
+const x = function (y) {
+
+}
+```
+
+```js
+x(function() {
+
+})
+```
+
+Now, y is being passed in x, and function x will decide when to call y, hence y is called callback function (it is declared but would be called later)
+
+
+## ES6 Features

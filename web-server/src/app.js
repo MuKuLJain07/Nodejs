@@ -1,12 +1,19 @@
 const express = require('express');
 
 const app = express();
+app.set('view engine', 'hbs');
 
 app.get('', (request, response) => {
-    response.sendFile('/Users/mukuljain/Documents/Mukul/Nodejs/web-server/components/index.html');
+    response.render('index');
 })
 app.get('/about', (request, response) => {
-    response.sendFile('/Users/mukuljain/Documents/Mukul/Nodejs/web-server/components/about.html');
+    response.render('about');
+})
+app.get('/weather', (request, response) => {
+    response.render('weather', {
+        country: 'India',
+        temp: '32'
+    });
 })
 
 app.listen(3000, () => {
