@@ -38,14 +38,8 @@ app.get('/weather', (req, res) => {
                 Location: location,
                 Forecast: data,
             });
-            // console.log("Location: ", location)
-            // console.log("Data: ", data);
         })
     })
-    // res.send({
-    //     Location: location,
-    //     Forecast: weather,
-    // })
 });
 
 // Catch-all route using RegEx
