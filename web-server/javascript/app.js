@@ -1,21 +1,19 @@
-// const location = document.getElementById('locationInput').value;
-// const resultDiv = document.getElementById('weatherResult');
-
-// const response = await fetch(`https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}`);
-
-// resultDiv.textContent = 'Failed to fetch weather data.';
-
-
-function getWeather() {
-    const location = document.getElementById('locationInput').value;
+async function getWeather() {
+    const userLocation = document.getElementById('locationInput').value;
     const resultDiv = document.getElementById('weatherResult');
 
-    if (!location) {
+    if (!userLocation) {
         resultDiv.textContent = 'Please enter a location.';
         return;
     }
 
-    // Just display the input location on the page
-    resultDiv.textContent = `You entered: ${location}`;
-}
+    const res = await fetch(`/getWeather?address=${encodeURIComponent(userLocation)}`);
+    const data = await res.json();
+    console.log(data);
 
+    if (data.error) {
+        resultDiv.textContent = data.error;
+    } else {
+        resultDiv.textContent = `Location: ${data.location}, Forecast: ${data.forecast}`;
+    }
+}
