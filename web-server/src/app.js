@@ -11,8 +11,6 @@ app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, '../views'));
 app.use(express.static(path.join(__dirname, '../javascript')));
 
-
-
 app.get('/', (req, res) => {
     res.render('index');
 });
@@ -21,36 +19,36 @@ app.get('/about', (req, res) => {
     res.render('about');
 });
 
-app.get('/weather', (req, res) => {
-    res.render('weather');
+app.get('/getWeather', (req, res) => {
+    if(!req.query.address) {
+        return res.send({
+            error: 'You must provide an address'
+        });
+    }
+
+    geocode(req.query.address, (error, data) => {
+        if(error){
+            return console.log("Geocode Error: ", error);
+        }
+        
+        const latitude = data.latitude;
+        const longitude = data.longitude;
+        const location = data.location;
+        forecast(latitude, longitude, (error, data) => {
+            if(error){
+                return console.log("Forecast Error: ", error);
+            }
+            res.send({
+                location: location,
+                forecast: data["actual_temp: latitude"],
+            });
+        })
+    })
 });
 
-// app.get('/weather', (req, res) => {
-    // if(!req.query.address) {
-    //     return res.send({
-    //         error: 'You must provide an address'
-    //     });
-    // }
-
-    // geocode(req.query.address, (error, data) => {
-    //     if(error){
-    //         return console.log("Geocode Error: ", error);
-    //     }
-        
-    //     const latitude = data.latitude;
-    //     const longitude = data.longitude;
-    //     const location = data.location;
-    //     forecast(latitude, longitude, (error, data) => {
-    //         if(error){
-    //             return console.log("Forecast Error: ", error);
-    //         }
-    //         res.send({
-    //             Location: location,
-    //             Forecast: data,
-    //         });
-    //     })
-    // })
-// });
+app.get('/weather', (req, res) => {
+    res.render('weather')
+});
 
 // Catch-all route using RegEx
 app.all(/.*/, (request, response) => {
