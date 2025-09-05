@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IgniteTasks - Sign Up</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: url("https://unsplash.com/photos/black-coupe-on-concrete-road-799KfBloSFQ.jpg") no-repeat center center/cover;
+      color: #fff;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 40px;
+      width: 350px;
+      text-align: center;
+      box-shadow: 0px 8px 20px rgba(0,0,0,0.5);
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 20px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      color: #f5f5f5;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 6px;
+      background: #e63946;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #ff4c5c;
+    }
+
+    .link {
+      margin-top: 15px;
+      font-size: 0.9rem;
+    }
+
+    .link a {
+      color: #ffb703;
+      text-decoration: none;
+    }
+
+    .link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay"></div>
+  <div class="container">
+    <h1>Create Your Account</h1>
+    <form action="/users" method="POST">
+      <input type="text" name="name" placeholder="Enter your name" required />
+      <input type="email" name="email" placeholder="Enter your email" required />
+      <input type="password" name="password" placeholder="Enter password" required />
+      <input type="number" name="age" placeholder="Enter your age" min="13" required />
+      <button type="submit">Sign Up</button>
+    </form>
+    <div class="link">
+      Already have an account? <a href="/">Login</a>
+    </div>
+  </div>
+</body>
+</html>

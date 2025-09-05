@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const userSchema = new mongoose.Schema({
+const taskSchema = new mongoose.Schema({
     description: {
         type: String,
         trim: true,
@@ -9,8 +9,16 @@ const userSchema = new mongoose.Schema({
     completed: {
         type: Boolean,
         default: false
+    },
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'User'
     }
+}, {
+    timestamps: true
 })
+
 
 // userSchema.pre('save', async function (next) {
 //     const user = this;
@@ -23,7 +31,7 @@ const userSchema = new mongoose.Schema({
 // })
 
 // const User = mongoose.model('User', userSchema)
-const Task = mongoose.model('Task', userSchema)
+const Task = mongoose.model('Task', taskSchema)
 
 
 module.exports = Task;

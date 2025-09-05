@@ -1,8 +1,13 @@
 const express = require('express');
 const { model } = require('mongoose');
 const User = require('../models/user');
+const auth = require('../middleware/auth'); 
+const multer = require('multer');
 
 const router = express.Router();
+
+router.use(express.urlencoded({ extended: true }));
+router.use(express.json());
 
 // Users APIs
 router.post('/users', async (req, res) => {
@@ -10,7 +15,8 @@ router.post('/users', async (req, res) => {
 
     try {
         await user.save();
-        res.status(201).send(user);
+        const token = await user.generateAuthToken();
+        res.status(201).send({ user, token});
     } catch (e) {
         res.status(400).send(e);
     }
@@ -26,27 +32,38 @@ router.post('/users/login', async (req, res) => {
     try {
         const user = await User.findByCredentials(req.body.email, req.body.password);
         const token = await user.generateAuthToken();
-        res.send(user);
+        res.send({ user , token });
     } catch (e) {
         console.error(e);
         res.status(400).send({error: 'Login failed! Check authentication credentials.'});
     }
 })
 
-router.get('/users', async (req, res) => {
-
+router.post('/users/logout', auth, async (req, res) => {
     try {
-        const user = await User.find({});
-        res.send(user);
-    } catch (e) {
-        res.status(500).send(e);
-    }
+        req.user.tokens = req.user.tokens.filter((token) => {
+            return token.token !== req.token;   // remove only current token
+        });
 
-    // User.find({}).then((user) => {
-    //     res.status(201).send(user);
-    // }).catch((error) => {
-    //     res.status(500).send();
-    // })
+        await req.user.save();
+        res.send({ message: 'Logout successful!' });
+    } catch (e) {
+        res.status(500).send({ error: 'Logout failed!' });
+    }
+});
+
+router.post('/users/logoutAll', auth, async (req, res) => {
+    try {
+        req.user.tokens = [];
+        await req.user.save();
+        res.send({ message: 'Logged out from all devices!' });
+    } catch (e) {
+        res.status(500).send({ error: 'Logout failed!' });
+    }
+});
+
+router.get('/users/me', auth, async (req, res) => {
+    res.send(req.user);
 })
 
 router.get('/users/:id', async (req, res) => {
@@ -73,8 +90,8 @@ router.get('/users/:id', async (req, res) => {
     // })
 })
 
-router.patch('/users/:id', async (req, res) => {
-    const _id = req.params.id;
+router.patch('/users/me', auth, async (req, res) => {
+    const _id = req.user._id;
     const allowed_updates = ['name', 'email', 'password', 'age'];
     const updates = Object.keys(req.body);
     const isValidOperation = updates.every((update) => allowed_updates.includes(update));
@@ -86,14 +103,14 @@ router.patch('/users/:id', async (req, res) => {
     try {
         const user = await User.findById(_id);
         updates.forEach((update) => {
-            user[update] = req.body[update];
+            req.user[update] = req.body[update];
         });
-        await user.save();
+        await req.user.save();
         // const user = await User.findByIdAndUpdate(_id, req.body, {new: true, runValidators: true});
 
-        if(!user) {
-            return res.status(404).send();
-        }
+        // if(!user) {
+        //     return res.status(404).send();
+        // }
 
         res.send(user);
     } catch (e) {
@@ -101,24 +118,41 @@ router.patch('/users/:id', async (req, res) => {
     }
 })
 
-router.delete('/users/:id', async (req, res) => {
-    const _id = req.params.id;
+router.delete('/users/me', auth, async (req, res) => {
+    const _id = req.user._id;
 
     try {
         const user = await User.findByIdAndDelete(_id);
-        if(!user) {
-            return res.status(404).send();
-        }
-        res.send(user);
+        // if(!user) {
+        //     return res.status(404).send();
+        // }
+
+        // await req.user.remove(_id);
+        res.send(req.user);
     } catch (e) {
         res.status(500).send(e);
     }
 })
 
 
+// Multer module
+const upload = multer({
+    dest: 'avatar',
+    limits: {
+        fileSize: 1000000
+    },
+    fileFilter(req, file, cb) {
+        
+        // cb(new Error('Only image is expected'));
+        // cb(undefined, true);
+        // cb(undefined, false);
+    }
+})
+router.post('/users/me/avatar', upload.single('avatar'), (req, res) => {
+    res.send();
+});
 
 module.exports = router;
-
 
 
 const bcrypt = require('bcryptjs');
