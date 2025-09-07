@@ -142,7 +142,7 @@ const upload = multer({
         fileSize: 1000000
     },
     fileFilter(req, file, cb) {
-        
+
         // cb(new Error('Only image is expected'));
         // cb(undefined, true);
         // cb(undefined, false);
